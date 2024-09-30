@@ -19,5 +19,7 @@ public: // Functions
 	virtual void HighlightActor() override;
 	virtual void UnhighlightActor() override;
 	
+	UPROPERTY(BluePrintReadOnly)
+	bool bHighlighted = false;
 	
 };
