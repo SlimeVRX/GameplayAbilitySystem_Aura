@@ -44,8 +44,7 @@ void AAuraPlayerController::SetupInputComponent()
 	if(EnhancedInputComponent)
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
-	}
-	
+	}	
 
 }
 
