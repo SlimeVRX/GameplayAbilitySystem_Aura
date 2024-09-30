@@ -14,8 +14,11 @@ class AURA_API AAuraCharacterBase : public ACharacter
 public:
 	AAuraCharacterBase();
 
-protected:
+protected: // Functions
 	virtual void BeginPlay() override;
 	
+protected: // Properties
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TObjectPtr<USkeletalMeshComponent> Weapon;
 	
 };
