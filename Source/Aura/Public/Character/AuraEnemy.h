@@ -20,7 +20,11 @@ public: // Functions
 	virtual void HighlightActor() override;
 	virtual void UnhighlightActor() override;
 	
+public: // Properties
 	UPROPERTY(BluePrintReadOnly)
 	bool bHighlighted = false;
 	
+protected: // Functions
+	virtual void BeginPlay() override;
+
 };
