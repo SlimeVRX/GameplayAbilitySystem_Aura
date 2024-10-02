@@ -45,11 +45,15 @@ void AAuraEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 			if (MutableAuraAttributeSet)
 			{
 				MutableAuraAttributeSet->SetHealth(AuraAttributeSet->GetHealth() + 25.0f);
+				MutableAuraAttributeSet->SetMana(AuraAttributeSet->GetMana() + 25.0f);
 				// print GetHealth
 				UE_LOG(LogTemp, Warning, TEXT("Health: %f"), AuraAttributeSet->GetHealth());
+				// print GetMana
+				UE_LOG(LogTemp, Warning, TEXT("Mana: %f"), AuraAttributeSet->GetMana());
 				if (GEngine)
 				{
 					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Health: %f"), AuraAttributeSet->GetHealth()));
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Mana: %f"), AuraAttributeSet->GetMana()));
 				}
 				Destroy();
 			}
