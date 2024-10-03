@@ -24,7 +24,7 @@ void AAuraEffectActor::BeginPlay()
 
 void AAuraEffectActor::ApplyEffectToActor(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
-	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);	
 	if (TargetASC)
 	{
 		if (GameplayEffectClass)
@@ -39,6 +39,14 @@ void AAuraEffectActor::ApplyEffectToActor(AActor* TargetActor, TSubclassOf<UGame
 			}
 		}
 	}
+}
+
+void AAuraEffectActor::OnOverlap(AActor* TargetActor)
+{
+}
+
+void AAuraEffectActor::OnEndOverlap(AActor* TargetActor)
+{
 }
 
 
