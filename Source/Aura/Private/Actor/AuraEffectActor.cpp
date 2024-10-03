@@ -2,67 +2,43 @@
 
 
 #include "Actor/AuraEffectActor.h"
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Components/SphereComponent.h"
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
-#include "AbilitySystem/AuraAttributeSet.h"
+//#include "AbilitySystem/AuraAttributeSet.h"
 
 
 AAuraEffectActor::AAuraEffectActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	SetRootComponent(Mesh);
-
-	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
-	Sphere->SetupAttachment(RootComponent);
-
-
-
+	SetRootComponent(CreateDefaultSubobject<USphereComponent>(TEXT("SceneRoot")));
 }
 
 void AAuraEffectActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AAuraEffectActor::OnOverlap);
-	Sphere->OnComponentEndOverlap.AddDynamic(this, &AAuraEffectActor::EndOverlap);
-
 }
 
-void AAuraEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AAuraEffectActor::ApplyEffectToActor(AActor* Target, TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
-	// TODO: Change this to apply a Gameplay Effect. For now, using const_cast as a hack!
-	if (IAbilitySystemInterface* ASCInterface = Cast<IAbilitySystemInterface>(OtherActor))
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target);	
+	if (TargetASC)
 	{
-		const UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(
-			ASCInterface->GetAbilitySystemComponent()->GetAttributeSet(UAuraAttributeSet::StaticClass())
-		);
-		if (AuraAttributeSet)
+		if (GameplayEffectClass)
 		{
-			UAuraAttributeSet* MutableAuraAttributeSet = const_cast<UAuraAttributeSet*>(AuraAttributeSet);
-			if (MutableAuraAttributeSet)
+			FGameplayEffectContextHandle EffectContextHandle = TargetASC->MakeEffectContext();
+			EffectContextHandle.AddSourceObject(this);
+			const FGameplayEffectSpecHandle EffectSpecHandle =
+				TargetASC->MakeOutgoingSpec(GameplayEffectClass, 1.f, EffectContextHandle);
+			if (EffectSpecHandle.IsValid())
 			{
-				MutableAuraAttributeSet->SetHealth(AuraAttributeSet->GetHealth() + 25.0f);
-				MutableAuraAttributeSet->SetMana(AuraAttributeSet->GetMana() + 25.0f);
-				// print GetHealth
-				UE_LOG(LogTemp, Warning, TEXT("Health: %f"), AuraAttributeSet->GetHealth());
-				// print GetMana
-				UE_LOG(LogTemp, Warning, TEXT("Mana: %f"), AuraAttributeSet->GetMana());
-				if (GEngine)
-				{
-					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Health: %f"), AuraAttributeSet->GetHealth()));
-					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Mana: %f"), AuraAttributeSet->GetMana()));
-				}
-				Destroy();
+				TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 			}
 		}
 	}
-}
-
-void AAuraEffectActor::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
 }
 
 
