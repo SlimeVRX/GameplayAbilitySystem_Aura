@@ -27,4 +27,6 @@ public: // Properties
 protected: // Functions
 	virtual void BeginPlay() override;
 
+	virtual void InitAbilityActorInfo() override;
+
 };
