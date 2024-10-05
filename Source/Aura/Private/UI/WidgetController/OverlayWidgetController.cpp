@@ -40,14 +40,16 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 			{
 				for (const FGameplayTag& Tag : AssetTags)
 				{
-					//TODO: Broadcast the tag to the Widget Controller
-					UE_LOG(LogTemp, Warning, TEXT("Effect Tag: %s"), *Tag.ToString());
-					if (GEngine)
+					// Check if the Tag is a Message tag
+					FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag(FName("Message"));
+					if (Tag.MatchesTag(MessageTag))
 					{
-						GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Effect Tag: %s"), *Tag.ToString()));
+						const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
+						if (Row)
+						{
+							MessageWidgetRowDelegate.Broadcast(*Row);
+						}
 					}
-
-					FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
 				}
 			}
 		);
