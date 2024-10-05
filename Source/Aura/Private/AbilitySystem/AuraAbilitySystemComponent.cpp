@@ -10,7 +10,16 @@ void UAuraAbilitySystemComponent::AbilityActorInfoSet()
 
 void UAuraAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle)
 {
-	if (GEngine) {
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Effect Applied"));
+	// Lam the nao gui thong tin ve effect nay hien thi tren UI
+	FGameplayTagContainer EffectTags;
+	EffectSpec.GetAllAssetTags(EffectTags);
+	for (FGameplayTag EffectTag : EffectTags)
+	{
+		//TODO: Broadcast the tag to the Widget Controller
+		UE_LOG(LogTemp, Warning, TEXT("Effect Tag: %s"), *EffectTag.ToString());
+		if (GEngine) 
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Effect Tag: %s"), *EffectTag.ToString()));
+		}
 	}
 }
