@@ -13,13 +13,7 @@ void UAuraAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* Ability
 	// Lam the nao gui thong tin ve effect nay hien thi tren UI
 	FGameplayTagContainer EffectTags;
 	EffectSpec.GetAllAssetTags(EffectTags);
-	for (FGameplayTag EffectTag : EffectTags)
-	{
-		//TODO: Broadcast the tag to the Widget Controller
-		UE_LOG(LogTemp, Warning, TEXT("Effect Tag: %s"), *EffectTag.ToString());
-		if (GEngine) 
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Effect Tag: %s"), *EffectTag.ToString()));
-		}
-	}
+
+	EffectAssetTags.Broadcast(EffectTags);
+
 }
