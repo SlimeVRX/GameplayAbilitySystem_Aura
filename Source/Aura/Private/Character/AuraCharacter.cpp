@@ -40,6 +40,19 @@ void AAuraCharacter::OnRep_PlayerState()
 
 }
 
+int32 AAuraCharacter::GetPlayerLevel()
+{
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	return AuraPlayerState->GetPlayerLevel();
+	//if (AuraPlayerState)
+	//{
+	//	return AuraPlayerState->GetPlayerLevel();
+	//}
+
+	//UE_LOG(LogTemp, Warning, TEXT("AuraPlayerState is invalid in GetPlayerLevel()"));
+}
+
 void AAuraCharacter::InitAbilityActorInfo()
 {
 	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
